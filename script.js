@@ -13,12 +13,15 @@
   }
 
   function render() {
+    document.querySelector('.stage')?.classList.toggle('reading', current > 0);
     pages.forEach((page, i) => {
       const flipped = i < current;
       page.classList.toggle('flipped', flipped);
       page.style.zIndex = flipped ? String(i + 1) : String(pages.length - i + 1);
       page.setAttribute('aria-hidden', flipped ? 'true' : 'false');
     });
+    const activeContent = pages[current]?.querySelector('.page-inner');
+    if (activeContent) activeContent.scrollTo({ top: 0, behavior: 'instant' });
     counter.textContent = current === 0 ? 'આમંત્રણ ખોલવા ટૅપ કરો' : `${labels[current - 1]} · ${current}/${pages.length - 1}`;
     prevButton.disabled = current === 0;
     nextButton.disabled = current === pages.length - 1;

@@ -503,6 +503,9 @@ body{background:radial-gradient(ellipse at 50% 0%,#fff8f0 0,#f3e2df 52%,#dfc6c3 
   .page.cover:before{background-size:clamp(82px,22vw,112px) auto,clamp(82px,22vw,112px) auto;opacity:.92}
   .page:not(.cover):before{background-position:center 3px,left 6px top 2px,right 6px top 2px,left 10px top 54px,right 10px top 54px;background-size:calc(100% - 16px) 48px,44px 48px,44px 48px,21px 33px,21px 33px}
 }
+/* Keep inner-page content accessible on short phones without showing scrollbars. */
+.page:nth-child(n+2):not(.cover) .page-inner{overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.page:nth-child(n+2):not(.cover) .page-inner::-webkit-scrollbar{display:none}
 /* Event card photos replace the small decorative emoji icons. */
 .page:nth-child(3) .event-grid .event{grid-template-columns:42px 1fr;gap:7px}
 .page:nth-child(3) .event-icon img{display:block;width:40px;height:40px;object-fit:cover;object-position:center;border-radius:6px;mix-blend-mode:multiply;box-shadow:0 2px 6px #50352820}
@@ -510,3 +513,20 @@ body{background:radial-gradient(ellipse at 50% 0%,#fff8f0 0,#f3e2df 52%,#dfc6c3 
   .page:nth-child(3) .event-grid .event{grid-template-columns:38px 1fr;gap:5px}
   .page:nth-child(3) .event-icon img{width:36px;height:36px}
 }
+/* Keep navigation and each inner-page heading visible while scrolling. */
+.top-mark{position:relative;top:auto;z-index:auto;padding:0;background:none;backdrop-filter:none}
+.sticky-controls{position:sticky;bottom:env(safe-area-inset-bottom,0px);z-index:20;padding:4px 0 max(4px,env(safe-area-inset-bottom,0px));background:linear-gradient(0deg,#edd9d4e8,#edd9d400);}
+.sticky-controls .navigation{margin:5px auto 2px}
+.sticky-controls .hint{margin:0}
+.page:nth-child(n+2):not(.cover) .page-inner{scroll-behavior:smooth;scroll-padding-top:60px;scroll-padding-bottom:24px}
+.page:nth-child(n+2):not(.cover) .page-inner>.small{position:sticky;top:0;z-index:3;padding:7px 0 5px;background:linear-gradient(180deg,#fffdf8 0%,#fffdf8ed 82%,#fffdf800 100%);}
+@media(max-width:600px){
+  .top-mark{padding:0}
+  .sticky-controls{padding:4px 0 max(4px,env(safe-area-inset-bottom,0px))}
+  .page:not(.cover) .page-inner{padding-top:80px}
+  .page:nth-child(n+2):not(.cover) .page-inner>.small{top:0}
+}
+/* Keep the cover's controls in normal flow; pin them only while reading pages. */
+.top-mark{z-index:10;background-color:transparent!important}
+.sticky-controls{position:static;z-index:auto;padding:0;background:none;backdrop-filter:none}
+.stage.reading .sticky-controls{position:sticky;bottom:env(safe-area-inset-bottom,0px);z-index:20;padding:4px 0 max(4px,env(safe-area-inset-bottom,0px));background:linear-gradient(0deg,#edd9d4e8,#edd9d400)}
