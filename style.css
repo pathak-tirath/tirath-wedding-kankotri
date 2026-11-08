@@ -90,3 +90,423 @@
   .wedding-event p{font-size:12px}
 }
 @media(prefers-reduced-motion:reduce){.ganesh-art{animation:none}}
+
+/* Make event timing and venue details easier to scan. */
+.page:nth-child(3) .event-time{display:table;width:max-content;max-width:100%;margin:5px 0 8px;padding:3px 8px;border-radius:5px;background:#f5e8dc;color:#581d2b;font-size:14px;font-weight:700;line-height:1.55}
+.page:nth-child(3) .event-address{margin-top:6px;color:#38242a;font-size:14px;font-weight:500;line-height:1.7;letter-spacing:.01em}
+.page:nth-child(3) .map{font-size:12px;font-weight:700}
+.page:nth-child(3) .event-grid .event{grid-template-columns:42px 1fr;gap:7px}
+.page:nth-child(3) .event-icon img{display:block;width:40px;height:40px;object-fit:cover;object-position:center;border-radius:6px;mix-blend-mode:multiply;box-shadow:0 2px 6px #50352820}
+.page:nth-child(4) .ceremony-time{display:inline-block;padding:3px 10px;border-radius:5px;background:#f5e8dc;color:#581d2b;font-weight:700}
+.page:nth-child(4) .wedding-event .event-time{display:table;margin:8px auto;padding:3px 8px;border-radius:5px;background:#f5e8dc;color:#581d2b;font-size:13px;font-weight:700;line-height:1.55}
+.page:nth-child(4) .wedding-event .event-address{color:#38242a;font-size:13px;font-weight:500;line-height:1.7;letter-spacing:.01em}
+.page:nth-child(4) .wedding-event .map{font-size:12px;font-weight:700}
+.page:nth-child(4) .wedding-art{display:flex;justify-content:center;align-items:center;height:58px;padding:0}
+.page:nth-child(4) .wedding-art-image{display:block;width:76px;height:56px;object-fit:contain;mix-blend-mode:multiply;filter:drop-shadow(0 2px 2px #5e3a3020)}
+@media(max-width:600px){
+  .page:nth-child(3) .event-time{font-size:13px}
+  .page:nth-child(3) .event-address{font-size:12px;line-height:1.6}
+  .page:nth-child(3) .event-grid .event{grid-template-columns:38px 1fr;gap:5px}
+  .page:nth-child(3) .event-icon img{width:36px;height:36px}
+  .page:nth-child(4) .wedding-event .event-time{font-size:12px}
+  .page:nth-child(4) .wedding-event .event-address{font-size:12px;line-height:1.6}
+}
+
+/* Soft botanical palette and a share-first, phone-friendly cover. */
+:root{--maroon:#583c4b;--wine:#433443;--gold:#aa8750;--paper:#fffdf8;--ink:#342f35;--rose:#f5e9e7}
+body{background:radial-gradient(ellipse at 50% 0%,#e8d9d2 0,#b8c3b5 48%,#68776f 100%)}
+.ambient{opacity:.16;background-image:radial-gradient(circle,#fff8eb 1px,transparent 1.5px)}
+.top-mark{color:#fff9ec;font-size:13px;letter-spacing:.04em}
+.top-mark span{color:#f0d5a0}
+.book{filter:drop-shadow(0 24px 38px #26332955)}
+.page{background:#fffdf8;border-radius:8px 18px 18px 8px;box-shadow:inset 12px 0 18px -18px #493a3d,inset 0 0 0 1px #e5d9c8}
+.page:after{inset:12px;border-color:#ddcba9;border-radius:5px}
+.page.cover{color:#433443;background:linear-gradient(145deg,#fffaf2 0%,#f7efeb 58%,#f2e7e4 100%)}
+.page.cover:after{border-color:#d6bd91;inset:14px}
+.cover-arch{inset:28px;border:0;border-radius:0;background:radial-gradient(ellipse at 50% 36%,#fffdf9 0, #fffdf955 48%,transparent 72%)}
+.cover-arch:before,.cover-arch:after{position:absolute;content:"❀";color:#bd8da0;font-size:27px;opacity:.8;animation:petalFloat 5s ease-in-out infinite}
+.cover-arch:before{left:-7px;top:36%;transform:rotate(-20deg)}
+.cover-arch:after{right:-7px;top:53%;color:#9ba68c;animation-delay:-2.5s}
+.cover-ganesh .ganesh-art{filter:drop-shadow(0 3px 5px #a9894c35)}
+.cover-ganesh small{color:#96723e;font-size:13px;letter-spacing:.04em}
+.cover-content{margin-top:66px;padding:10px 18px}
+.eyebrow{font-size:13px;color:#806c6c;letter-spacing:.02em;margin:6px 0 8px}
+.cover-couple{width:min(205px,51vw);max-height:21vh;border:1px solid #e8dac5;border-radius:46% 46% 12px 12px;padding:4px;background:#fffdf8;box-shadow:0 8px 24px #63434b20}
+.cover h1{color:#56394b;font-size:clamp(27px,6.2vw,43px);margin:9px 0 0;text-shadow:none}
+.cover h1 span{color:#997b55}
+.cover h1 .union{color:#b78d62}
+.cover-subtitle{margin:0;color:#96764e;font-size:17px;font-weight:700;letter-spacing:.16em}
+.ornament{font-size:17px;color:#ae8b55;margin:5px 0}
+.ornament span{padding:0 6px;color:#b48491}
+.cover-date{margin:5px 0;color:#4f4448;font-size:15px;font-weight:700;letter-spacing:.02em}
+.cover-date i{font-style:normal;color:#b78d62;padding:0 5px}
+.cover-verse{margin:9px 0 0;color:#756166;font-size:13px;line-height:1.8}
+.open-btn{bottom:28px;background:#665064;color:#fffaf1;box-shadow:0 8px 20px #53405430;padding:12px 22px;transition:transform .2s,background .2s}
+.open-btn:hover{background:#4e3b50;transform:translateX(-50%) translateY(-2px)}
+.navigation{color:#fffaf1}
+.hint{color:#fff8ed}
+.whatsapp-share{display:flex;align-items:center;justify-content:center;gap:9px;width:max-content;max-width:100%;margin:10px auto 8px;padding:11px 20px;border:1px solid #ffffff55;border-radius:999px;background:#1e8061;color:white;text-decoration:none;font:600 14px/1.2 system-ui,sans-serif;box-shadow:0 8px 22px #173a2d35;transition:transform .2s,background .2s}
+.whatsapp-share:hover{background:#176a51;transform:translateY(-2px)}
+.whatsapp-icon{display:grid;place-items:center;width:21px;height:21px;border:1.5px solid currentColor;border-radius:50%;font-size:15px;line-height:1}
+.ganesh-art{animation:ganeshBreathe 4.5s ease-in-out infinite}
+.cover-arch:before,.cover-arch:after{pointer-events:none}
+@keyframes petalFloat{0%,100%{translate:0 0;rotate:0deg}50%{translate:0 -7px;rotate:8deg}}
+.cover h1 img.union{display:inline-block;width:clamp(28px,6vw,42px);height:clamp(25px,5.2vw,35px);object-fit:cover;object-position:center;border:1px solid #d6bd91;border-radius:50%;vertical-align:middle;box-shadow:0 2px 5px #4e374222}
+.event{border-color:#e7ddd0}
+.event h2,.wedding-title,.wedding-event h2{color:#634453}
+.map{color:#68503c;border-color:#cbb48c}
+.wedding-event{border-color:#e4d7c5;background:#fffdf8}
+.small{color:#634453}
+@media(max-width:600px){
+  .stage{padding:8px 8px 14px}
+  .pages{height:calc(100dvh - 145px);min-height:min(500px,calc(100dvh - 145px));max-height:780px}
+  .cover-arch{inset:20px}
+  .cover-arch>.cover-ganesh{top:2px}
+  .cover-ganesh .ganesh-art{width:106px;height:106px}
+  .cover-content{margin-top:52px;padding:8px}
+  .cover-couple{width:min(185px,52vw);max-height:19vh}
+  .cover-verse{font-size:12px;line-height:1.7}
+  .cover-date{font-size:14px}
+  .open-btn{bottom:25px}
+  .whatsapp-share{font-size:13px;padding:10px 17px;margin:8px auto 7px}
+}
+@media(max-height:720px) and (max-width:600px){
+  .cover-content{margin-top:43px}
+  .cover-couple{width:min(164px,46vw);max-height:17vh}
+  .cover-verse{margin-top:5px}
+  .cover-arch>.cover-ganesh{top:-5px}
+  .cover-ganesh .ganesh-art{width:88px;height:88px}
+}
+
+/* Floral watercolor cover finish, layered over the burgundy and ivory palette. */
+.page:before{
+  content:"";
+  position:absolute;
+  z-index:0;
+  inset:0;
+  border-radius:inherit;
+  background:none;
+  background-position:center,center;
+  background-repeat:no-repeat,no-repeat;
+  background-size:100% 100%,100% 100%;
+  opacity:.94;
+  pointer-events:none;
+}
+.page:not(.cover){background:linear-gradient(145deg,#fffdf8 0%,#fffaf2 100%)}
+.page.cover{
+  color:#fff7e9;
+  background:
+    radial-gradient(ellipse at 50% 42%,#642137 0%,transparent 58%),
+    linear-gradient(145deg,#5c172d 0%,#451124 55%,#2f0d1b 100%);
+}
+.page.cover:before{opacity:.95}
+.cover-arch:before,.cover-arch:after{content:none}
+.cover h1{color:#fff4df}
+.cover h1 span{color:#e5c99b}
+.cover h1 .union{color:#d8a7a2}
+.cover-subtitle,.cover-date{color:#e8c996}
+.cover-verse{color:#f0dcd2}
+.cover-ganesh small{color:#e4c58f}
+.open-btn{background:linear-gradient(135deg,#e0bd8b,#c99775);color:#431426;border:1px solid #f0d8b4}
+.open-btn:hover{background:linear-gradient(135deg,#ebcc9f,#d9a486)}
+@media(max-width:600px){
+  .page:before{opacity:.82}
+  .page.cover:before{opacity:.94}
+}
+@media(max-height:720px) and (max-width:600px){
+}
+
+/* Keep the rose bouquets at the cover edges and clear the text pages. */
+.page:before{content:none;background:none}
+.page:not(.cover):before{display:none}
+.page.cover:before{
+  content:"";
+  display:block;
+  position:absolute;
+  z-index:0;
+  inset:0;
+  background:none;
+  background-position:top right,bottom left;
+  background-repeat:no-repeat,no-repeat;
+  background-size:clamp(78px,24vw,148px) auto,clamp(78px,24vw,148px) auto;
+  opacity:.94;
+  pointer-events:none;
+}
+
+/* Ultra-luxe burgundy, rose gold, champagne and ivory finish. */
+:root{
+  --maroon:#541629;
+  --wine:#32101d;
+  --gold:#bd9561;
+  --paper:#fffaf1;
+  --ink:#3c2029;
+  --rose:#d5a0a4;
+}
+body{background:radial-gradient(ellipse at 50% 0%,#fffaf2 0,#f2e3df 48%,#dfc9c5 100%)}
+.ambient{opacity:.16;background-image:radial-gradient(circle,#d2a77c 1px,transparent 1.5px)}
+.top-mark,.navigation{color:#542837}
+.top-mark span{color:#bd9561}
+.hint{color:#74535a}
+.page{background:#fffaf1;box-shadow:inset 12px 0 18px -18px #3e1420,inset 0 0 0 1px #e8d9c4}
+.page:after,.page.cover:after{border-color:#c49a70}
+.page.cover{
+  color:#fff7e9;
+  background:
+    radial-gradient(ellipse at 50% 42%,#742a40 0%,transparent 57%),
+    linear-gradient(145deg,#681e35 0%,#4a1429 55%,#32101d 100%);
+}
+.page.cover:after{border-color:#cda77a;box-shadow:inset 0 0 0 1px #cda77a33}
+.cover-arch{background:radial-gradient(ellipse at 50% 36%,#fff8ed12 0,#fff8ed08 48%,transparent 72%)}
+.cover-arch:before,.cover-arch:after{color:#d8a7a2;opacity:.72}
+.cover-ganesh .ganesh-art{filter:sepia(.2) saturate(.78) drop-shadow(0 3px 7px #18070d80)}
+.cover-ganesh small{color:#e4c58f;text-shadow:0 1px 8px #1b0913}
+.eyebrow{color:#f0d8c9}
+.cover h1{color:#fff4df;text-shadow:0 2px 18px #1d081255}
+.cover h1 span{color:#e5c99b}
+.cover h1 .union{color:#d8a7a2}
+.cover-subtitle{color:#e8c996}
+.ornament,.cover-date i{color:#d9ae78}
+.ornament span{color:#d8a7a2}
+.cover-date{color:#fff1da}
+.cover-verse{color:#f0dcd2}
+.cover-couple{border-color:#d8b78d;background:#fff9ef;box-shadow:0 9px 28px #1e071748}
+.open-btn{background:linear-gradient(135deg,#e0bd8b,#c99775);color:#431426;box-shadow:0 8px 22px #18081270;border:1px solid #f0d8b4}
+.open-btn:hover{background:linear-gradient(135deg,#ebcc9f,#d9a486)}
+.small,.event h2,.wedding-title,.wedding-event h2{color:#541629}
+.date-line{color:#86613d}
+.event p,.wedding-event p,.body-copy,.center,.family{color:#3c2029}
+.map{color:#61283b;border-color:#c49a70}
+.wedding-event{border-color:#ddc7a8;background:linear-gradient(145deg,#fffdf8,#fbf3e9)}
+.event{border-color:#eadbc9}
+.couple-card{border-color:#cfad82;color:#541629}
+.parents h3,.blessing,.phone{color:#80513f}
+.wedding-emblem,.floral{color:#bd9561}
+.closing,.blessing-verse{color:#69434c}
+.family-title{color:#541629}
+.whatsapp-share{background:#541629;border-color:#d2ad83;color:#fff8ed;box-shadow:0 8px 22px #43142630}
+.whatsapp-share:hover{background:#3d1022}
+.whatsapp-icon{color:#e7c795}
+.page:before{
+  content:"";
+  position:absolute;
+  z-index:0;
+  inset:0;
+  border-radius:inherit;
+  background:none;
+  opacity:.74;
+  pointer-events:none;
+}
+.page.cover:before{opacity:.9}
+.cover-arch:before,.cover-arch:after{content:none}
+.page-inner{padding-left:clamp(48px,9vw,82px);padding-right:clamp(48px,9vw,82px)}
+@media(max-width:600px){
+  .page:before{opacity:.62}
+  .page.cover:before{opacity:.84}
+  .page-inner{padding-left:clamp(39px,11vw,54px);padding-right:clamp(39px,11vw,54px)}
+}
+.page:before{
+  background:none;
+  background-position:center,center;
+  background-repeat:no-repeat,no-repeat;
+  background-size:100% 100%,100% 100%;
+  opacity:.94;
+}
+.page:not(.cover){background:linear-gradient(145deg,#fffdf8 0%,#fffaf2 100%)}
+.page.cover{
+  background:
+    radial-gradient(ellipse at 50% 42%,#642137 0%,transparent 58%),
+    linear-gradient(145deg,#5c172d 0%,#451124 55%,#2f0d1b 100%);
+}
+.page.cover:before{opacity:.95}
+@media(max-width:600px){
+  .page:before{opacity:.82}
+  .page.cover:before{opacity:.94}
+}
+@media(prefers-reduced-motion:reduce){.cover-arch:before,.cover-arch:after{animation:none}.open-btn,.whatsapp-share{transition:none}}
+
+/* Blush, beige and antique gold invitation palette. */
+:root{
+  --maroon:#571b2a;
+  --wine:#3e1420;
+  --gold:#a98445;
+  --paper:#fffaf3;
+  --ink:#40252b;
+  --rose:#f5e4e3;
+}
+body{background:radial-gradient(ellipse at 50% 0%,#fff8f0 0,#f3e2df 52%,#dfc6c3 100%)}
+.ambient{opacity:.2;background-image:radial-gradient(circle,#ad8950 1px,transparent 1.5px)}
+.top-mark,.navigation{color:#5b2935}
+.top-mark span{color:#a98445}
+.hint{color:#68434a}
+.book{filter:drop-shadow(0 24px 38px #4a202522)}
+.page{background:#fffaf3;box-shadow:inset 12px 0 18px -18px #4c1c2a,inset 0 0 0 1px #e4d4bd}
+.page:after,.page.cover:after{border-color:#b99a63}
+.page.cover{color:#40252b;background:linear-gradient(145deg,#fffaf2 0%,#f8eeea 58%,#f0dfdf 100%)}
+.cover-arch{background:radial-gradient(ellipse at 50% 36%,#fffdf9 0,#fffdf955 48%,transparent 72%)}
+.cover-arch:before{color:#c99eaa}
+.cover-arch:after{color:#b89a69}
+.cover-ganesh .ganesh-art{filter:sepia(.16) saturate(.8) drop-shadow(0 3px 5px #80602b35)}
+.cover-ganesh small{color:#98743b}
+.eyebrow{color:#73545a}
+.cover h1{color:#571b2a}
+.cover h1 span{color:#967444}
+.cover h1 .union{color:#a98445}
+.cover-subtitle{color:#805b37}
+.ornament{color:#a98445}
+.cover-date{color:#40252b}
+.cover-date i{color:#a98445}
+.cover-verse{color:#65464c}
+.open-btn{background:#571b2a;color:#fff8ef;box-shadow:0 8px 20px #4b20272c}
+.open-btn:hover{background:#3e1420}
+.small,.event h2,.wedding-title,.wedding-event h2{color:#571b2a}
+.date-line{color:#805d34}
+.event p,.wedding-event p,.body-copy,.center,.family{color:#40252b}
+.map{color:#66303a;border-color:#b99a63}
+.wedding-event{border-color:#dfcdb1;background:#fffaf3}
+.event{border-color:#e6d8c8}
+.whatsapp-share{box-shadow:0 8px 22px #173a2d22}
+.page-inner{overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#c6aa79 transparent}
+.page-inner::-webkit-scrollbar{display:block;width:4px}
+.page-inner::-webkit-scrollbar-thumb{background:#c6aa79;border-radius:4px}
+@media(max-width:600px){
+  .stage{padding:8px 8px 14px}
+  .pages{height:calc(100dvh - 175px);min-height:min(440px,calc(100dvh - 175px));max-height:780px}
+  .page-inner{padding:34px 24px 28px}
+  .cover-arch{inset:20px}
+  .cover-arch>.cover-ganesh{top:2px}
+  .cover-ganesh .ganesh-art{width:106px;height:106px}
+  .cover-content{margin-top:52px;padding:8px}
+  .cover-couple{width:min(185px,52vw);max-height:19vh}
+  .cover-verse{font-size:12px;line-height:1.7}
+  .cover-date{font-size:14px}
+  .open-btn{bottom:25px}
+  .whatsapp-share{font-size:13px;padding:10px 17px;margin:8px auto 7px}
+  .event p{font-size:12px;overflow-wrap:anywhere}
+  .map{font-size:11px}
+}
+@media(max-height:720px) and (max-width:600px){
+  .cover-content{margin-top:43px}
+  .cover-couple{width:min(164px,46vw);max-height:17vh}
+  .cover-verse{margin-top:5px}
+  .cover-arch>.cover-ganesh{top:-5px}
+  .cover-ganesh .ganesh-art{width:88px;height:88px}
+}
+
+/* Final spacing fix: keep bouquets at the cover edges, away from text. */
+.page:before{content:none;background:none}
+.page:not(.cover):before{display:none}
+.page.cover:before{content:"";display:block;position:absolute;z-index:0;inset:0;background:none;opacity:.94;pointer-events:none}
+
+.page.cover{background:radial-gradient(ellipse at 50% 42%,#5b1a31 0%,transparent 58%),linear-gradient(145deg,#501327 0%,#3c0f20 55%,#270a16 100%)}
+@media(max-width:600px){.page:not(.cover):before{background-position:left 9px top 0,right 9px top 0;background-size:32px 56px;opacity:.5}}
+
+/* Cover contrast and bright gold detailing. */
+.page.cover .cover-arch{background:radial-gradient(ellipse at 50% 34%,#6c294377 0%,#4a172d55 56%,transparent 80%);border-color:#c6a06d}
+.page.cover .eyebrow{color:#f2dcc5}
+.page.cover h1{color:#fff2dc;text-shadow:0 2px 12px #21091388}
+.page.cover h1 span{color:#e2c58e}
+.page.cover h1 .union{color:#dca8a6}
+.page.cover .cover-subtitle,.page.cover .ornament{color:#e0bc7e}
+.page.cover .ornament span{color:#dfa6a7}
+.page.cover .cover-date{color:#fff0d8}
+.page.cover .cover-date i{color:#e2bb7e}
+.page.cover .cover-verse{color:#f4e3d4;text-shadow:0 1px 5px #220b1680}
+.page.cover .cover-ganesh small{color:#edcd8e}
+
+/* Traditional mango-leaf toran across the inner-page header. */
+.page:not(.cover):before{background-image:url("assets/toran.svg");background-position:center 3px;background-repeat:no-repeat;background-size:calc(100% - 28px) 54px;opacity:.94;filter:drop-shadow(0 2px 3px #b98e5570)}
+.page-inner{padding-top:68px}
+@media(max-width:600px){.page:not(.cover):before{background-position:center 3px;background-size:calc(100% - 18px) 43px;opacity:.92}.page-inner{padding-top:57px}}
+
+/* Visible toran and restrained floral detailing for the inner cards. */
+.page:not(.cover):before{content:"";display:block;position:absolute;z-index:0;inset:0;background-image:url("assets/toran.svg");background-position:center 5px;background-repeat:no-repeat;background-size:calc(100% - 24px) 68px;opacity:.78;filter:drop-shadow(0 2px 3px #b98e5570);pointer-events:none}
+.page-inner,.last-page .page-inner{padding-top:82px}
+.parents>div{padding:9px 7px;border:1px solid #e4d0b2;border-radius:10px;background:linear-gradient(145deg,#fffdf8,#f8ece8);box-shadow:0 4px 12px #6a32440a}
+.couple-card{background:linear-gradient(90deg,transparent,#f8e8e7 25%,#f8e8e7 75%,transparent);border-color:#caa879}
+.event-grid{gap:10px 12px}
+.event-grid .event{align-items:start;margin:0;padding:12px 10px;border:1px solid #e7d5bc;border-radius:10px;background:linear-gradient(145deg,#fffdf8,#fbf1e8);box-shadow:0 4px 12px #633b3610}
+.wedding-event{box-shadow:0 6px 16px #633b3610}
+@media(max-width:600px){.page:not(.cover):before{background-size:calc(100% - 16px) 48px,100% 100%;background-position:center 4px,center;opacity:.74}.page-inner,.last-page .page-inner{padding-top:66px}.parents>div{padding:8px 5px}.event-grid{gap:8px}.event-grid .event{padding:9px 7px}}
+
+/* Real rose clusters, clear non-scrolling event pages. */
+.page:before{content:none;display:none;background:none}
+.page.cover:before{content:"";display:block;position:absolute;z-index:0;inset:0;background-image:url("assets/rose-cluster-right-soft.png"),url("assets/rose-cluster-left-soft.png");background-position:top right,bottom left;background-repeat:no-repeat;background-size:clamp(90px,21vw,138px) auto,clamp(90px,21vw,138px) auto;opacity:.92;pointer-events:none}
+.page:not(.cover):before{content:"";display:block;position:absolute;z-index:0;inset:0;background-image:url("assets/toran.svg"),url("assets/rose-cluster-left-soft.png"),url("assets/rose-cluster-right-soft.png");background-position:center 4px,left 9px top 3px,right 9px top 3px;background-repeat:no-repeat;background-size:calc(100% - 28px) 60px,56px 60px,56px 60px;opacity:.94;filter:drop-shadow(0 2px 3px #b98e5570);pointer-events:none}
+.page:not(.cover) .page-inner{padding-top:86px}
+.page:nth-child(n+3) .page-inner{overflow:hidden;overscroll-behavior:none}
+.page:nth-child(3) .page-inner{padding-bottom:20px}
+.page:nth-child(3) .event-grid{gap:8px}
+.page:nth-child(3) .event-grid .event{padding:8px 7px}
+.page:nth-child(3) .event p{font-size:12px;line-height:1.45}
+.page:nth-child(3) .event h2{font-size:15px}
+.page:nth-child(3) .map{font-size:11px}
+.page:nth-child(4) .page-inner{padding-bottom:20px}
+.page:nth-child(4) .date-line{margin-bottom:10px}
+.page:nth-child(4) .wedding-emblem{font-size:36px;margin:2px}
+.page:nth-child(4) .wedding-title{font-size:20px;margin-bottom:6px}
+.page:nth-child(4) .wedding-grid{margin-top:12px;gap:9px}
+.page:nth-child(4) .wedding-event{padding:10px 8px}
+.page:nth-child(4) .wedding-event p{font-size:12px;line-height:1.5;margin:4px 0}
+.page.last-page .page-inner{padding-top:86px;padding-bottom:22px}
+.page.last-page .closing{font-size:16px;margin:8px 0 12px}
+.page.last-page .floral{font-size:23px}
+.page.last-page .family-title{margin:8px}
+.page.last-page .family{font-size:12px;line-height:1.55}
+.page.last-page .nimantrak{font-size:12px;line-height:1.6;margin:6px auto}
+.page.last-page .phone{margin:6px 0}
+.page.last-page .blessing-verse{font-size:12px;line-height:1.55;margin:8px auto;padding:8px}
+@media(max-width:600px){
+  .page:not(.cover):before{background-position:center 3px,left 7px top 3px,right 7px top 3px;background-size:calc(100% - 16px) 48px,54px 59px,54px 59px}
+  .page:not(.cover) .page-inner{padding-top:70px}
+  .page:nth-child(3) .page-inner{padding-left:19px;padding-right:19px;padding-bottom:14px}
+  .page:nth-child(3) .event-grid{grid-template-columns:1fr 1fr;gap:6px}
+  .page:nth-child(3) .event-grid .event{grid-template-columns:20px 1fr;gap:4px;padding:7px 5px}
+  .page:nth-child(3) .event p{font-size:10px;line-height:1.35}
+  .page:nth-child(3) .event h2{font-size:13px}
+  .page:nth-child(3) .event-icon{font-size:16px}
+  .page:nth-child(3) .map{font-size:9px}
+  .page:nth-child(4) .page-inner{padding-left:18px;padding-right:18px;padding-bottom:14px}
+  .page:nth-child(4) .wedding-grid{gap:6px;margin-top:8px}
+  .page:nth-child(4) .wedding-event{padding:7px 5px}
+  .page:nth-child(4) .wedding-event h2{font-size:13px}
+  .page:nth-child(4) .wedding-event p{font-size:10px;line-height:1.35}
+  .page.last-page .page-inner{padding:70px 18px 14px}
+  .page.last-page .closing{font-size:14px;line-height:1.5;margin:5px 0 7px}
+  .page.last-page .family-title{font-size:16px;margin:5px}
+  .page.last-page .family{font-size:10px;line-height:1.4}
+  .page.last-page .nimantrak{font-size:10px;line-height:1.4;padding:5px 12px}
+  .page.last-page .phone{font-size:10px}
+  .page.last-page .blessing-verse{font-size:10px;line-height:1.4;margin:5px auto;padding:6px}
+}
+@media(max-width:600px){
+  .page:nth-child(3) .event p{font-size:clamp(10px,2.8vw,11px)}
+  .page:nth-child(3) .map{font-size:clamp(9px,2.5vw,10px)}
+  .page:nth-child(4) .wedding-event p{font-size:clamp(10px,2.9vw,11px)}
+  .page.last-page .family{font-size:11px;line-height:1.35}
+  .page.last-page .nimantrak{font-size:11px;line-height:1.35}
+  .page.last-page .blessing-verse{font-size:11px;line-height:1.35}
+}
+/* Softened rose edges and a small lantern pair under the toran. */
+.page.cover:before{background-image:url("assets/rose-cluster-right-soft.png"),url("assets/rose-cluster-left-soft.png");background-size:clamp(90px,21vw,138px) auto,clamp(90px,21vw,138px) auto;opacity:.92}
+.page:not(.cover):before{
+  background-image:url("assets/toran.svg"),url("assets/rose-cluster-left-soft.png"),url("assets/rose-cluster-right-soft.png"),url("assets/lantern-accent.svg"),url("assets/lantern-accent.svg");
+  background-position:center 4px,left 9px top 3px,right 9px top 3px,left 15px top 65px,right 15px top 65px;
+  background-repeat:no-repeat;
+  background-size:calc(100% - 28px) 60px,56px 60px,56px 60px,25px 39px,25px 39px;
+  opacity:.94;
+  filter:drop-shadow(0 2px 3px #b98e5570);
+}
+.navigation button:disabled{opacity:.38;cursor:default}
+.navigation button:not(:disabled):hover{background:#70243b;color:#fff6e8;transform:translateY(-1px)}
+.navigation button{transition:background .18s,color .18s,transform .18s}
+@media(max-width:600px){
+  .page.cover:before{background-size:clamp(82px,22vw,112px) auto,clamp(82px,22vw,112px) auto;opacity:.92}
+  .page:not(.cover):before{background-position:center 3px,left 6px top 2px,right 6px top 2px,left 10px top 54px,right 10px top 54px;background-size:calc(100% - 16px) 48px,44px 48px,44px 48px,21px 33px,21px 33px}
+}
+/* Event card photos replace the small decorative emoji icons. */
+.page:nth-child(3) .event-grid .event{grid-template-columns:42px 1fr;gap:7px}
+.page:nth-child(3) .event-icon img{display:block;width:40px;height:40px;object-fit:cover;object-position:center;border-radius:6px;mix-blend-mode:multiply;box-shadow:0 2px 6px #50352820}
+@media(max-width:600px){
+  .page:nth-child(3) .event-grid .event{grid-template-columns:38px 1fr;gap:5px}
+  .page:nth-child(3) .event-icon img{width:36px;height:36px}
+}

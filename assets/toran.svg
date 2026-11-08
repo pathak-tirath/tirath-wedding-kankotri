@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 112" fill="none">
+  <defs>
+    <linearGradient id="cord" x1="30" y1="10" x2="690" y2="55" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#b78b54"/><stop offset=".5" stop-color="#e6c98f"/><stop offset="1" stop-color="#b78b54"/>
+    </linearGradient>
+    <linearGradient id="leaf" x1="0" y1="0" x2="20" y2="32" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#9b9564"/><stop offset="1" stop-color="#66744f"/>
+    </linearGradient>
+    <g id="mangoLeaf">
+      <path d="M0 0C-13 11-12 26 0 34 12 26 13 11 0 0Z" fill="url(#leaf)" stroke="#d3b37c" stroke-width="1.3"/>
+      <path d="M0 3v26" stroke="#e7cf9f" stroke-width="1"/>
+    </g>
+    <g id="marigold">
+      <circle r="10" fill="#d79d55" stroke="#f1d59b" stroke-width="1.5"/>
+      <path d="M0-9c4 4 4 14 0 18M-9 0c4-4 14-4 18 0M-6-6c6 2 10 8 12 12M6-6C0-4-4 2-6 6" stroke="#f2d8a6" stroke-width="1.3" stroke-linecap="round"/>
+      <circle r="2.3" fill="#f6e3b9"/>
+    </g>
+    <g id="bell">
+      <path d="M-7 0h14l-2 13H-5L-7 0Z" fill="#c59a5e" stroke="#f0d7a6" stroke-width="1.3"/>
+      <path d="M-5 0c0-7 10-7 10 0M0 13v4" stroke="#e8ce99" stroke-width="1.3" stroke-linecap="round"/>
+      <circle cy="18" r="2" fill="#dba8a0" stroke="#f0d7a6" stroke-width=".8"/>
+      <path d="M-4 4h8" stroke="#f3dfb2" stroke-width="1"/>
+    </g>
+  </defs>
+  <path d="M22 15C155 15 180 56 360 57 540 56 565 15 698 15" stroke="url(#cord)" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M28 20C150 20 190 62 360 63 530 62 570 20 692 20" stroke="#d9a8a1" stroke-opacity=".82" stroke-width="1.2"/>
+  <g>
+    <use href="#mangoLeaf" transform="translate(54 18) rotate(-35) scale(.7)"/><use href="#mangoLeaf" transform="translate(83 22) rotate(36) scale(.78)"/>
+    <use href="#mangoLeaf" transform="translate(116 28) rotate(-34) scale(.76)"/><use href="#mangoLeaf" transform="translate(148 35) rotate(34) scale(.78)"/>
+    <use href="#mangoLeaf" transform="translate(181 41) rotate(-32) scale(.72)"/><use href="#mangoLeaf" transform="translate(215 46) rotate(32) scale(.74)"/>
+    <use href="#mangoLeaf" transform="translate(250 50) rotate(-30) scale(.72)"/><use href="#mangoLeaf" transform="translate(285 54) rotate(30) scale(.72)"/>
+    <use href="#mangoLeaf" transform="translate(320 56) rotate(-25) scale(.68)"/><use href="#mangoLeaf" transform="translate(400 56) rotate(25) scale(.68)"/>
+    <use href="#mangoLeaf" transform="translate(435 54) rotate(-30) scale(.72)"/><use href="#mangoLeaf" transform="translate(470 50) rotate(30) scale(.72)"/>
+    <use href="#mangoLeaf" transform="translate(505 46) rotate(-32) scale(.74)"/><use href="#mangoLeaf" transform="translate(539 41) rotate(32) scale(.72)"/>
+    <use href="#mangoLeaf" transform="translate(572 35) rotate(-34) scale(.78)"/><use href="#mangoLeaf" transform="translate(604 28) rotate(34) scale(.76)"/>
+    <use href="#mangoLeaf" transform="translate(637 22) rotate(-36) scale(.78)"/><use href="#mangoLeaf" transform="translate(666 18) rotate(35) scale(.7)"/>
+  </g>
+  <use href="#marigold" transform="translate(117 29) scale(.8)"/><use href="#marigold" transform="translate(219 47) scale(.72)"/>
+  <use href="#marigold" transform="translate(360 60) scale(1.05)"/><use href="#marigold" transform="translate(501 47) scale(.72)"/><use href="#marigold" transform="translate(603 29) scale(.8)"/>
+  <use href="#bell" transform="translate(171 43) scale(.78)"/><use href="#bell" transform="translate(270 57) scale(.72)"/>
+  <use href="#bell" transform="translate(450 57) scale(.72)"/><use href="#bell" transform="translate(549 43) scale(.78)"/>
+  <path d="M23 13h13m648 0h13" stroke="#c49a64" stroke-width="3" stroke-linecap="round"/>
+</svg>
