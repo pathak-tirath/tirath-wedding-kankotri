@@ -29,18 +29,31 @@
   function next() { if (current < pages.length - 1) { current++; render(); } }
   function prev() { if (current > 0) { current--; render(); } }
 
-  document.querySelector('.open-btn').addEventListener('click', e => { e.stopPropagation(); next(); });
+  document.getElementById('welcomeOpen')?.addEventListener('click', e => {
+    e.stopPropagation();
+    next();
+  });
   prevButton.addEventListener('click', prev);
   nextButton.addEventListener('click', next);
   let startX = 0;
+  let startY = 0;
   let suppressClick = false;
   const book = document.querySelector('.book');
-  book.addEventListener('touchstart', e => { startX = e.changedTouches[0].clientX; }, { passive: true });
+  book.addEventListener('touchstart', e => {
+    startX = e.changedTouches[0].clientX;
+    startY = e.changedTouches[0].clientY;
+  }, { passive: true });
   book.addEventListener('touchend', e => {
-    const delta = e.changedTouches[0].clientX - startX;
-    if (Math.abs(delta) > 55) {
+    const deltaX = e.changedTouches[0].clientX - startX;
+    const deltaY = e.changedTouches[0].clientY - startY;
+    const onControl = e.target.closest('a, button');
+    if (Math.abs(deltaY) > 12) {
       suppressClick = true;
-      delta < 0 ? next() : prev();
+      window.setTimeout(() => { suppressClick = false; }, 350);
+    }
+    if (!onControl && Math.abs(deltaX) > 55 && Math.abs(deltaX) > Math.abs(deltaY) * 1.2) {
+      suppressClick = true;
+      deltaX < 0 ? next() : prev();
       window.setTimeout(() => { suppressClick = false; }, 350);
     }
   }, { passive: true });
