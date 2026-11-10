@@ -64,3 +64,32 @@
   });
   render();
 })();
+
+(function () {
+  document.querySelectorAll('.page:not(.cover)').forEach(function (page) {
+    var inner = page.querySelector('.page-inner');
+    if (!inner) return;
+
+    var hint = document.createElement('div');
+    hint.className = 'scroll-hint';
+    hint.innerHTML =
+      '<button type="button" aria-label="નીચે સ્ક્રોલ કરો"><span>નીચે જુઓ</span><i>⌄</i></button>';
+    page.appendChild(hint);
+
+    function update() {
+      var remaining = inner.scrollHeight - inner.scrollTop - inner.clientHeight;
+      hint.classList.toggle('show', remaining > 24);
+    }
+
+    inner.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    window.addEventListener('load', update);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(update);
+
+    hint.querySelector('button').addEventListener('click', function () {
+      inner.scrollBy({ top: inner.clientHeight * 0.7, behavior: 'smooth' });
+    });
+
+    update();
+  });
+})();

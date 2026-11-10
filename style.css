@@ -3472,3 +3472,55 @@ body {
     font-size: 13px;
   }
 }
+
+/* Scroll cue: fade + "look below" button, shown only when more content is below */
+.scroll-hint {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 13px;
+  height: 88px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 12px;
+  background: linear-gradient(to top, #fffaf0 20%, rgba(255, 250, 240, 0) 100%);
+  border-radius: 0 0 10px 10px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+  pointer-events: none;      /* the fade never blocks touches */
+  z-index: 5;
+}
+.scroll-hint.show {
+  opacity: 1;
+  visibility: visible;
+}
+.scroll-hint button {
+  pointer-events: auto;      /* only the button is tappable */
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1px solid #d2ad83;
+  border-radius: 999px;
+  background: #571b2a;
+  color: #fff8ef;
+  font: 600 14px/1.2 inherit;
+  font-family: inherit;
+  box-shadow: 0 6px 16px rgba(75, 32, 39, 0.28);
+  cursor: pointer;
+}
+.scroll-hint button i {
+  font-style: normal;
+  font-size: 18px;
+  line-height: 1;
+  animation: hintBounce 1.2s ease-in-out infinite;
+}
+@keyframes hintBounce {
+  0%, 100% { transform: translateY(-2px); }
+  50%      { transform: translateY(3px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-hint button i { animation: none; }
+}
