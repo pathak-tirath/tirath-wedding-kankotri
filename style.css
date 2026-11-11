@@ -3538,26 +3538,20 @@ body {
   perspective: none; /* perspective now lives on each page's transform */
 }
 
-/* ---------- 2. Text-size bar (injected by script.js, sits under the page arrows) ---------- */
+/* ---------- 2. Text-size bar: bottom dock, directly under the page arrows, on EVERY page ---------- */
 .zoom-ctrl {
-  display: none;
+  display: flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
   width: max-content;
   max-width: 100%;
   margin: 6px auto 0;
-  padding: 2px 4px 2px 14px;
+  padding: 3px 5px 3px 14px;
   border: 1px solid #c9a971;
   border-radius: 999px;
-  background: rgba(255, 250, 240, 0.92);
+  background: rgba(255, 250, 240, 0.94);
   box-shadow: 0 4px 12px rgba(60, 25, 35, 0.18);
-}
-.stage.zoomable .zoom-ctrl {
-  display: flex;
-}
-.stage.zoomable .sticky-controls .hint {
-  display: none; /* the zoom bar takes the hint's place on inner pages */
 }
 .zoom-label {
   font-size: 13px;
@@ -3572,14 +3566,22 @@ body {
   display: none;
 }
 .zoom-ctrl button {
-  width: 32px;
-  height: 32px;
+  width: 42px; /* comfortable thumb target */
+  height: 42px;
   border: 0;
   border-radius: 50%;
   background: #571b2a;
   color: #fff8ef;
-  font: 700 14px/1 system-ui, sans-serif;
+  font: 700 16px/1 system-ui, sans-serif;
   cursor: pointer;
+  transition: transform 0.12s;
+}
+.zoom-ctrl button:active:not(:disabled) {
+  transform: scale(0.92);
+}
+.zoom-ctrl button:focus-visible {
+  outline: 3px solid #a9772f;
+  outline-offset: 2px;
 }
 .zoom-ctrl button:disabled {
   opacity: 0.35;
@@ -3587,12 +3589,12 @@ body {
 }
 .zoom-ctrl .zoom-level {
   width: auto;
-  min-width: 46px;
+  min-width: 52px;
   padding: 0 4px;
-  border-radius: 8px;
+  border-radius: 10px;
   background: transparent;
   color: #571b2a;
-  font-size: 12px;
+  font-size: 13px;
 }
 /* first visit only: highlight the bar and pulse A+ for a few seconds */
 .zoom-ctrl.zoom-tip {
@@ -3615,19 +3617,70 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .zoom-ctrl.zoom-tip button[data-z="1"] { animation: none; }
 }
-/* reserve room for the extra bar on phones so the book never gets cut */
+
+/* reserve room for the bar so the book never gets cut */
 @media (max-width: 700px) {
   .pages {
-    height: calc(100dvh - 176px);
-    min-height: min(430px, calc(100dvh - 176px));
+    height: calc(100dvh - 182px);
+    min-height: min(430px, calc(100dvh - 182px));
   }
 }
 @media (max-height: 620px) and (max-width: 700px) {
   .pages {
-    height: calc(100dvh - 152px);
+    height: calc(100dvh - 170px);
   }
 }
+@media (min-width: 701px) {
+  .pages {
+    height: min(calc(100vh - 215px), 760px);
+    min-height: 480px;
+  }
+}
+
+/* inner pages: text grows, the page scrolls */
 .page:not(.cover):not(.welcome-page) .page-inner > * {
+  zoom: var(--text-zoom, 1);
+}
+/* welcome page: verse grows, poster stops being fixed-height, screen scrolls */
+.welcome-page .welcome-screen {
+  overflow-x: hidden;
+  overflow-y: auto;
+  justify-content: center;
+  justify-content: safe center;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+.welcome-page .welcome-screen::-webkit-scrollbar {
+  display: none;
+}
+.welcome-page .welcome-screen > * {
+  zoom: var(--text-zoom, 1);
+}
+html[data-zoomed] .welcome-page .welcome-poster {
+  height: auto;
+}
+html[data-zoomed] .welcome-page .welcome-art {
+  flex: none;
+  height: 34vh;
+}
+html[data-zoomed] .welcome-page .welcome-verse {
+  flex: none;
+  height: auto;
+}
+html[data-zoomed] .welcome-page .welcome-poster hr {
+  display: none;
+}
+/* cover: text grows (couple photo stays), cover scrolls */
+.page.cover .cover-arch {
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+.page.cover .cover-arch::-webkit-scrollbar {
+  display: none;
+}
+.page.cover .cover-content > :not(.cover-couple) {
   zoom: var(--text-zoom, 1);
 }
 

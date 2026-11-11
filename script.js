@@ -39,7 +39,7 @@
     turnTimer = window.setTimeout(() => book.classList.remove('turning'), dur + 120);
     stage.classList.toggle('reading', current > 0);
     stage.classList.toggle('zoomable', current >= 2);
-    if (current >= 2) startTip();
+    if (current >= 1) startTip();
     pages.forEach((page, i) => {
       const flipped = i < current;
       page.classList.toggle('flipped', flipped);
@@ -196,7 +196,8 @@
     '<button type="button" data-z="-1" aria-label="અક્ષર નાના કરો">A−</button>' +
     '<button type="button" class="zoom-level" data-z="0" aria-label="મૂળ કદ">100%</button>' +
     '<button type="button" data-z="1" aria-label="અક્ષર મોટા કરો">A+</button>';
-  (document.querySelector('.sticky-controls') || stage).appendChild(ctrl);
+  const dock = document.querySelector('.sticky-controls') || stage;
+  dock.insertBefore(ctrl, dock.querySelector('.hint')); // order: arrows, text size, hint
 
   /* first-visit cue: highlighted label + pulsing A+ for a few seconds */
   let tipTimer = 0;
@@ -215,6 +216,8 @@
 
   function applyZoom(save) {
     document.documentElement.style.setProperty('--text-zoom', LEVELS[zi]);
+    if (zi > 0) document.documentElement.setAttribute('data-zoomed', '1');
+    else document.documentElement.removeAttribute('data-zoomed');
     level.textContent = Math.round(LEVELS[zi] * 100) + '%';
     minus.disabled = zi === 0;
     plus.disabled = zi === LEVELS.length - 1;
