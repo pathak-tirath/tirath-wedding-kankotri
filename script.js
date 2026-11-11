@@ -13,6 +13,8 @@
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
   const isZoomed = () => !!window.visualViewport && window.visualViewport.scale > 1.05;
   let current = 0;
+  let lastMs = -1;
+  let turnTimer = 0;
 
   /* shading layer inside every page */
   pages.forEach(p => {
@@ -22,28 +24,29 @@
     p.appendChild(s);
   });
 
+  document.querySelectorAll('.book img').forEach(img => { img.decoding = 'async'; });
+
   if (whatsappShare) {
     const inviteText = 'તિરથ અને પૂર્વાશાના શુભ વિવાહ પ્રસંગે આપને સહકુટુંબ પધારવાનું ભાવભર્યું આમંત્રણ. 💐\nલગ્ન: રવિવાર, ૨૮ ફેબ્રુઆરી ૨૦૨૭ · અમરેલી\nઆમંત્રણ અને સ્થળની વિગતો: ' + window.location.href;
     whatsappShare.href = `https://wa.me/?text=${encodeURIComponent(inviteText)}`;
   }
 
-  function clearDrag() {
-    pages.forEach(p => {
-      p.style.removeProperty('--turn');
-      p.style.removeProperty('--shade');
-      p.style.removeProperty('visibility');
-    });
-  }
-
   function render(ms = FLIP_MS) {
-    book.style.setProperty('--flip-ms', (reduceMotion ? 1 : ms) + 'ms');
+    const dur = reduceMotion ? 1 : ms;
+    if (dur !== lastMs) { book.style.setProperty('--flip-ms', dur + 'ms'); lastMs = dur; }
+    book.classList.add('turning'); // promotes layers + pauses decorative loops only while turning
+    window.clearTimeout(turnTimer);
+    turnTimer = window.setTimeout(() => book.classList.remove('turning'), dur + 120);
     stage.classList.toggle('reading', current > 0);
     stage.classList.toggle('zoomable', current >= 2);
+    if (current >= 2) startTip();
     pages.forEach((page, i) => {
       const flipped = i < current;
       page.classList.toggle('flipped', flipped);
       page.classList.toggle('is-active', i === current);
       page.classList.toggle('is-next', i === current + 1);
+      page.classList.toggle('is-prev', i === current - 1);
+      page.classList.toggle('is-far', i > current + 1);
       /* a turning page always stays above the rest until it finishes */
       page.style.zIndex = flipped ? String(50 + i) : String(30 - i);
       page.setAttribute('aria-hidden', i === current ? 'false' : 'true');
@@ -76,30 +79,41 @@
   });
 
   /* ---------- drag-to-turn: the page follows your finger ---------- */
-  const drag = { ok: false, locked: false, x0: 0, y0: 0, t0: 0, dir: 0, p: 0 };
+  const shades = pages.map(p => p.querySelector('.page-shade'));
+  const drag = { ok: false, locked: false, x0: 0, y0: 0, t0: 0, dir: 0, p: 0, w: 1, raf: 0 };
   let suppressClick = false;
   const suppress = () => {
     suppressClick = true;
     window.setTimeout(() => { suppressClick = false; }, 350);
   };
-  const setPage = (el, turn, shade) => {
-    if (!el) return;
-    if (turn !== null) el.style.setProperty('--turn', turn + 'deg');
-    el.style.setProperty('--shade', shade);
-  };
-  function applyDrag(p) {
-    drag.p = p;
+  const turnCss = deg => `perspective(2400px) rotateY(${deg}deg)`;
+  function setPage(i, deg, shade) {
+    if (deg !== null) pages[i].style.transform = turnCss(deg);
+    shades[i].style.opacity = shade;
+  }
+  function clearDrag() {
+    pages.forEach((pg, i) => {
+      pg.style.removeProperty('transform');
+      pg.style.removeProperty('visibility');
+      shades[i].style.removeProperty('opacity');
+    });
+  }
+  /* one style write per frame, never per touch event */
+  function paintDrag() {
+    drag.raf = 0;
+    const p = drag.p;
     if (drag.dir === 1) {
-      setPage(pages[current], -90 * p, p);
-      setPage(pages[current + 1], null, 1 - p);
+      setPage(current, -90 * p, p);
+      setPage(current + 1, null, 1 - p);
     } else {
-      const back = pages[current - 1];
-      back.style.visibility = 'visible';
-      setPage(back, -90 * (1 - p), 1 - p);
-      setPage(pages[current], null, p);
+      pages[current - 1].style.visibility = 'visible';
+      setPage(current - 1, -90 * (1 - p), 1 - p);
+      setPage(current, null, p);
     }
   }
   function endDrag(commit) {
+    window.cancelAnimationFrame(drag.raf);
+    drag.raf = 0;
     book.classList.remove('dragging');
     clearDrag();
     const dir = drag.dir;
@@ -116,6 +130,7 @@
     drag.y0 = e.touches[0].clientY;
     drag.t0 = Date.now();
     drag.p = 0;
+    drag.w = (book.clientWidth || 1) * 0.85; // measured once, not on every move
   }, { passive: true });
 
   book.addEventListener('touchmove', e => {
@@ -137,11 +152,12 @@
           return;
         }
         drag.locked = true;
-        book.classList.add('dragging');
+        book.classList.add('dragging', 'turning');
+        window.clearTimeout(turnTimer);
       } else return;
     }
-    const w = (book.clientWidth || 1) * 0.85;
-    applyDrag(clamp((drag.dir === 1 ? -dx : dx) / w, 0, 1));
+    drag.p = clamp((drag.dir === 1 ? -dx : dx) / drag.w, 0, 1);
+    if (!drag.raf) drag.raf = window.requestAnimationFrame(paintDrag);
   }, { passive: true });
 
   book.addEventListener('touchend', e => {
@@ -176,10 +192,25 @@
   ctrl.setAttribute('role', 'group');
   ctrl.setAttribute('aria-label', 'અક્ષરનું કદ');
   ctrl.innerHTML =
+    '<span class="zoom-label"><b class="zl-n">અક્ષરનું કદ</b><b class="zl-t">અક્ષર મોટા કરો</b></span>' +
     '<button type="button" data-z="-1" aria-label="અક્ષર નાના કરો">A−</button>' +
     '<button type="button" class="zoom-level" data-z="0" aria-label="મૂળ કદ">100%</button>' +
     '<button type="button" data-z="1" aria-label="અક્ષર મોટા કરો">A+</button>';
-  book.appendChild(ctrl);
+  (document.querySelector('.sticky-controls') || stage).appendChild(ctrl);
+
+  /* first-visit cue: highlighted label + pulsing A+ for a few seconds */
+  let tipTimer = 0;
+  try { if (localStorage.getItem('inviteZoomTip') !== '1') ctrl.classList.add('zoom-tip'); } catch (_) {}
+  function endTip() {
+    if (!ctrl.classList.contains('zoom-tip')) return;
+    ctrl.classList.remove('zoom-tip');
+    window.clearTimeout(tipTimer);
+    try { localStorage.setItem('inviteZoomTip', '1'); } catch (_) {}
+  }
+  function startTip() {
+    if (tipTimer || !ctrl.classList.contains('zoom-tip')) return;
+    tipTimer = window.setTimeout(endTip, 9000);
+  }
   const [minus, level, plus] = ctrl.querySelectorAll('button');
 
   function applyZoom(save) {
@@ -195,6 +226,7 @@
   ctrl.addEventListener('click', e => {
     const b = e.target.closest('button');
     if (!b) return;
+    endTip();
     const z = Number(b.dataset.z);
     zi = z === 0 ? 0 : clamp(zi + z, 0, LEVELS.length - 1);
     applyZoom(true);
@@ -220,9 +252,14 @@
       hint.classList.toggle('show', remaining > 24);
     }
 
-    inner.addEventListener('scroll', update, { passive: true });
-    window.addEventListener('resize', update);
-    window.addEventListener('load', update);
+    var raf = 0;
+    function schedule() {
+      if (raf) return;
+      raf = requestAnimationFrame(function () { raf = 0; update(); });
+    }
+    inner.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
+    window.addEventListener('load', schedule);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(update);
 
     hint.querySelector('button').addEventListener('click', function () {

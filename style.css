@@ -3538,34 +3538,47 @@ body {
   perspective: none; /* perspective now lives on each page's transform */
 }
 
-/* ---------- 2. Text-size control (injected by script.js) ---------- */
+/* ---------- 2. Text-size bar (injected by script.js, sits under the page arrows) ---------- */
 .zoom-ctrl {
-  position: absolute;
-  top: 7px;
-  right: 10px;
-  z-index: 80;
   display: none;
   align-items: center;
-  gap: 2px;
-  padding: 3px;
+  justify-content: center;
+  gap: 6px;
+  width: max-content;
+  max-width: 100%;
+  margin: 6px auto 0;
+  padding: 2px 4px 2px 14px;
   border: 1px solid #c9a971;
   border-radius: 999px;
-  background: rgba(255, 250, 240, 0.86);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-  box-shadow: 0 4px 12px rgba(60, 25, 35, 0.2);
+  background: rgba(255, 250, 240, 0.92);
+  box-shadow: 0 4px 12px rgba(60, 25, 35, 0.18);
 }
 .stage.zoomable .zoom-ctrl {
   display: flex;
 }
+.stage.zoomable .sticky-controls .hint {
+  display: none; /* the zoom bar takes the hint's place on inner pages */
+}
+.zoom-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #571b2a;
+  white-space: nowrap;
+}
+.zoom-label b {
+  font-weight: inherit;
+}
+.zoom-label .zl-t {
+  display: none;
+}
 .zoom-ctrl button {
-  width: 38px;
-  height: 38px;
+  width: 32px;
+  height: 32px;
   border: 0;
   border-radius: 50%;
   background: #571b2a;
   color: #fff8ef;
-  font: 700 15px/1 system-ui, sans-serif;
+  font: 700 14px/1 system-ui, sans-serif;
   cursor: pointer;
 }
 .zoom-ctrl button:disabled {
@@ -3581,59 +3594,86 @@ body {
   color: #571b2a;
   font-size: 12px;
 }
+/* first visit only: highlight the bar and pulse A+ for a few seconds */
+.zoom-ctrl.zoom-tip {
+  border-color: #a9772f;
+  background: #fff1d3;
+}
+.zoom-ctrl.zoom-tip .zl-n {
+  display: none;
+}
+.zoom-ctrl.zoom-tip .zl-t {
+  display: inline;
+}
+.zoom-ctrl.zoom-tip button[data-z="1"] {
+  animation: zoomPulse 1.3s ease-out infinite;
+}
+@keyframes zoomPulse {
+  0% { box-shadow: 0 0 0 0 rgba(169, 119, 47, 0.7); }
+  100% { box-shadow: 0 0 0 12px rgba(169, 119, 47, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .zoom-ctrl.zoom-tip button[data-z="1"] { animation: none; }
+}
+/* reserve room for the extra bar on phones so the book never gets cut */
+@media (max-width: 700px) {
+  .pages {
+    height: calc(100dvh - 176px);
+    min-height: min(430px, calc(100dvh - 176px));
+  }
+}
+@media (max-height: 620px) and (max-width: 700px) {
+  .pages {
+    height: calc(100dvh - 152px);
+  }
+}
 .page:not(.cover):not(.welcome-page) .page-inner > * {
   zoom: var(--text-zoom, 1);
 }
 
-/* ---------- 3. Page-turn animation ---------- */
+/* ---------- 3. Page-turn animation (tuned for phones: low memory, no per-frame repaints) ---------- */
 .pages {
-  transform-style: flat; /* z-index now decides stacking, no depth-sort flicker */
+  transform-style: flat;
 }
 .page {
-  --flip-ease: cubic-bezier(0.45, 0.05, 0.2, 1);
-  transform: perspective(2400px) rotateY(var(--turn, 0deg));
+  transform: perspective(2400px) rotateY(0deg);
   transform-origin: left center;
-  backface-visibility: hidden;
+  backface-visibility: visible; /* pages stop edge-on at 90deg, no back face is ever shown */
   visibility: visible;
   will-change: auto;
   box-shadow:
     inset 12px 0 18px -18px #4c1c2a,
-    inset 0 0 0 1px #e4d4bd,
-    0 0 0 rgba(30, 10, 16, 0);
+    inset 0 0 0 1px #e4d4bd;
   transition:
-    transform var(--flip-ms, 1000ms) var(--flip-ease),
-    box-shadow var(--flip-ms, 1000ms) var(--flip-ease),
+    transform var(--flip-ms, 1000ms) cubic-bezier(0.45, 0.05, 0.2, 1),
     visibility 0s;
 }
-.page.is-active,
-.page.is-next {
-  will-change: transform;
-}
-/* Page ends edge-on (-90deg), so the whole duration is visible
-   (the old -180deg hid the page at 90deg and the rest was dead time). */
+/* ends edge-on (-90deg) so the full duration is visible */
 .page.flipped {
-  --turn: -90deg;
-  transform: perspective(2400px) rotateY(var(--turn, -90deg));
+  transform: perspective(2400px) rotateY(-90deg);
   visibility: hidden;
   pointer-events: none;
+  will-change: auto;
   box-shadow:
     inset -12px 0 18px -18px #4c1c2a,
-    inset 0 0 0 1px #e4d4bd,
-    18px 4px 36px rgba(30, 10, 16, 0.42);
+    inset 0 0 0 1px #e4d4bd;
   transition:
-    transform var(--flip-ms, 1000ms) var(--flip-ease),
-    box-shadow var(--flip-ms, 1000ms) var(--flip-ease),
+    transform var(--flip-ms, 1000ms) cubic-bezier(0.45, 0.05, 0.2, 1),
     visibility 0s linear var(--flip-ms, 1000ms);
 }
-.page.is-active {
-  --shade: 0;
+/* pages more than one step ahead are never seen: not painted, no GPU layer */
+.page.is-far {
+  visibility: hidden;
 }
-.page.is-next,
-.page.flipped {
-  --shade: 1;
+/* GPU layers only for the 3 pages involved, and only while turning */
+.book.turning .page.is-active,
+.book.turning .page.is-next,
+.book.turning .page.is-prev {
+  will-change: transform;
 }
 
-/* Soft shading: turning page darkens, page underneath lightens as it is revealed */
+/* Shading uses opacity only (compositor-friendly): turning page darkens,
+   the page underneath lightens as it is revealed */
 .page-shade {
   position: absolute;
   inset: 0;
@@ -3646,14 +3686,51 @@ body {
     rgba(48, 16, 26, 0.16) 38%,
     rgba(48, 16, 26, 0) 80%
   );
-  opacity: var(--shade, 0);
+  opacity: 0;
   transition: opacity var(--flip-ms, 1000ms) ease;
 }
+.page.is-next > .page-shade,
+.page.flipped > .page-shade {
+  opacity: 1;
+}
 
-/* While a finger is dragging the page, follow it with no easing */
+/* finger is dragging: follow it with no easing */
 .book.dragging .page,
 .book.dragging .page-shade {
   transition: none !important;
+}
+
+/* idle/off-screen pages and turning pages don't run decorative loops */
+.page:not(.is-active) *,
+.page:not(.is-active) *::before,
+.page:not(.is-active) *::after,
+.book.turning *,
+.book.turning *::before,
+.book.turning *::after {
+  animation-play-state: paused !important;
+}
+
+/* phones / touch: drop the expensive effects */
+@media (max-width: 700px), (pointer: coarse) {
+  .book {
+    filter: none; /* a filter on the parent re-rasterises everything every frame */
+  }
+  .pages {
+    border-radius: 12px;
+    box-shadow: 0 14px 22px -10px rgba(22, 10, 12, 0.4); /* static, painted once */
+  }
+  .ambient {
+    display: none;
+  }
+  .page:not(.cover)::before {
+    filter: none;
+  }
+  .page:nth-child(n + 2):not(.cover) .page-inner > .small,
+  .page:nth-child(n + 2):not(.cover) .page-inner > .date-line {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: #fffaf0;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
