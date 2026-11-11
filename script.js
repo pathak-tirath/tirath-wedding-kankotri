@@ -1,24 +1,53 @@
 (() => {
+  const stage = document.querySelector('.stage');
+  const book = document.querySelector('.book');
   const pages = [...document.querySelectorAll('.page')];
   const counter = document.getElementById('counter');
   const prevButton = document.getElementById('prevPage');
   const nextButton = document.getElementById('nextPage');
-  let current = 0;
   const labels = ['મંગલ આમંત્રણ', 'શુભ સંદેશ', 'માંગલિક પ્રસંગો', 'લગ્નવિધિ', 'સ્નેહબંધન'];
   const whatsappShare = document.getElementById('whatsappShare');
+  const FLIP_MS = 1000;     // tap / button / keyboard
+  const RELEASE_MS = 600;   // after letting go of a drag
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+  const isZoomed = () => !!window.visualViewport && window.visualViewport.scale > 1.05;
+  let current = 0;
+
+  /* shading layer inside every page */
+  pages.forEach(p => {
+    const s = document.createElement('span');
+    s.className = 'page-shade';
+    s.setAttribute('aria-hidden', 'true');
+    p.appendChild(s);
+  });
 
   if (whatsappShare) {
     const inviteText = 'તિરથ અને પૂર્વાશાના શુભ વિવાહ પ્રસંગે આપને સહકુટુંબ પધારવાનું ભાવભર્યું આમંત્રણ. 💐\nલગ્ન: રવિવાર, ૨૮ ફેબ્રુઆરી ૨૦૨૭ · અમરેલી\nઆમંત્રણ અને સ્થળની વિગતો: ' + window.location.href;
     whatsappShare.href = `https://wa.me/?text=${encodeURIComponent(inviteText)}`;
   }
 
-  function render() {
-    document.querySelector('.stage')?.classList.toggle('reading', current > 0);
+  function clearDrag() {
+    pages.forEach(p => {
+      p.style.removeProperty('--turn');
+      p.style.removeProperty('--shade');
+      p.style.removeProperty('visibility');
+    });
+  }
+
+  function render(ms = FLIP_MS) {
+    book.style.setProperty('--flip-ms', (reduceMotion ? 1 : ms) + 'ms');
+    stage.classList.toggle('reading', current > 0);
+    stage.classList.toggle('zoomable', current >= 2);
     pages.forEach((page, i) => {
       const flipped = i < current;
       page.classList.toggle('flipped', flipped);
-      page.style.zIndex = flipped ? String(i + 1) : String(pages.length - i + 1);
-      page.setAttribute('aria-hidden', flipped ? 'true' : 'false');
+      page.classList.toggle('is-active', i === current);
+      page.classList.toggle('is-next', i === current + 1);
+      /* a turning page always stays above the rest until it finishes */
+      page.style.zIndex = flipped ? String(50 + i) : String(30 - i);
+      page.setAttribute('aria-hidden', i === current ? 'false' : 'true');
+      if ('inert' in page) page.inert = i !== current;
     });
     const activeContent = pages[current]?.querySelector('.page-inner');
     if (activeContent) activeContent.scrollTo({ top: 0, behavior: 'instant' });
@@ -26,8 +55,14 @@
     prevButton.disabled = current === 0;
     nextButton.disabled = current === pages.length - 1;
   }
-  function next() { if (current < pages.length - 1) { current++; render(); } }
-  function prev() { if (current > 0) { current--; render(); } }
+  function go(d, ms) {
+    const n = current + d;
+    if (n < 0 || n >= pages.length) return;
+    current = n;
+    render(ms);
+  }
+  const next = () => go(1);
+  const prev = () => go(-1);
 
   document.getElementById('welcomeOpen')?.addEventListener('click', e => {
     e.stopPropagation();
@@ -35,33 +70,137 @@
   });
   prevButton.addEventListener('click', prev);
   nextButton.addEventListener('click', next);
-  let startX = 0;
-  let startY = 0;
-  let suppressClick = false;
-  const book = document.querySelector('.book');
-  book.addEventListener('touchstart', e => {
-    startX = e.changedTouches[0].clientX;
-    startY = e.changedTouches[0].clientY;
-  }, { passive: true });
-  book.addEventListener('touchend', e => {
-    const deltaX = e.changedTouches[0].clientX - startX;
-    const deltaY = e.changedTouches[0].clientY - startY;
-    const onControl = e.target.closest('a, button');
-    if (Math.abs(deltaY) > 12) {
-      suppressClick = true;
-      window.setTimeout(() => { suppressClick = false; }, 350);
-    }
-    if (!onControl && Math.abs(deltaX) > 55 && Math.abs(deltaX) > Math.abs(deltaY) * 1.2) {
-      suppressClick = true;
-      deltaX < 0 ? next() : prev();
-      window.setTimeout(() => { suppressClick = false; }, 350);
-    }
-  }, { passive: true });
-  book.addEventListener('click', e => {
-    if (suppressClick) return;
-    if (e.target.closest('a, button')) return;
-    next();
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') next();
+    if (e.key === 'ArrowLeft') prev();
   });
+
+  /* ---------- drag-to-turn: the page follows your finger ---------- */
+  const drag = { ok: false, locked: false, x0: 0, y0: 0, t0: 0, dir: 0, p: 0 };
+  let suppressClick = false;
+  const suppress = () => {
+    suppressClick = true;
+    window.setTimeout(() => { suppressClick = false; }, 350);
+  };
+  const setPage = (el, turn, shade) => {
+    if (!el) return;
+    if (turn !== null) el.style.setProperty('--turn', turn + 'deg');
+    el.style.setProperty('--shade', shade);
+  };
+  function applyDrag(p) {
+    drag.p = p;
+    if (drag.dir === 1) {
+      setPage(pages[current], -90 * p, p);
+      setPage(pages[current + 1], null, 1 - p);
+    } else {
+      const back = pages[current - 1];
+      back.style.visibility = 'visible';
+      setPage(back, -90 * (1 - p), 1 - p);
+      setPage(pages[current], null, p);
+    }
+  }
+  function endDrag(commit) {
+    book.classList.remove('dragging');
+    clearDrag();
+    const dir = drag.dir;
+    drag.ok = drag.locked = false;
+    suppress();
+    if (commit) go(dir, RELEASE_MS);
+    else render(RELEASE_MS);
+  }
+
+  book.addEventListener('touchstart', e => {
+    drag.ok = e.touches.length === 1 && !isZoomed() && !e.target.closest('.zoom-ctrl');
+    drag.locked = false;
+    drag.x0 = e.touches[0].clientX;
+    drag.y0 = e.touches[0].clientY;
+    drag.t0 = Date.now();
+    drag.p = 0;
+  }, { passive: true });
+
+  book.addEventListener('touchmove', e => {
+    if (!drag.ok) return;
+    if (e.touches.length > 1 || isZoomed()) {
+      if (drag.locked) endDrag(false);
+      drag.ok = false;
+      return;
+    }
+    const t = e.touches[0];
+    const dx = t.clientX - drag.x0;
+    const dy = t.clientY - drag.y0;
+    if (!drag.locked) {
+      if (Math.abs(dy) > 10 && Math.abs(dy) > Math.abs(dx)) { drag.ok = false; return; } // vertical scroll
+      if (Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy) * 1.2) {
+        drag.dir = dx < 0 ? 1 : -1;
+        if ((drag.dir === 1 && current >= pages.length - 1) || (drag.dir === -1 && current <= 0)) {
+          drag.ok = false;
+          return;
+        }
+        drag.locked = true;
+        book.classList.add('dragging');
+      } else return;
+    }
+    const w = (book.clientWidth || 1) * 0.85;
+    applyDrag(clamp((drag.dir === 1 ? -dx : dx) / w, 0, 1));
+  }, { passive: true });
+
+  book.addEventListener('touchend', e => {
+    if (!drag.locked) { drag.ok = false; return; }
+    const dt = Math.max(1, Date.now() - drag.t0);
+    const v = Math.abs(e.changedTouches[0].clientX - drag.x0) / dt;
+    endDrag(drag.p > 0.3 || (v > 0.5 && drag.p > 0.05));
+  }, { passive: true });
+  book.addEventListener('touchcancel', () => { if (drag.locked) endDrag(false); drag.ok = false; }, { passive: true });
+
+  /* swallow the click that follows a drag (also stops accidental map-link taps) */
+  book.addEventListener('click', e => {
+    if (suppressClick) { e.preventDefault(); e.stopPropagation(); }
+  }, true);
+  /* tap: left edge = back, anywhere else = forward. Ignored while pinch-zoomed. */
+  book.addEventListener('click', e => {
+    if (isZoomed() || e.target.closest('a, button, .zoom-ctrl')) return;
+    const r = book.getBoundingClientRect();
+    (e.clientX - r.left < r.width * 0.2) ? prev() : next();
+  });
+
+  /* ---------- text-size control (A− / 100% / A+) ---------- */
+  const LEVELS = [1, 1.15, 1.3, 1.5, 1.75];
+  let zi = 0;
+  try {
+    const saved = parseInt(localStorage.getItem('inviteZoom'), 10);
+    if (saved >= 0 && saved < LEVELS.length) zi = saved;
+  } catch (_) {}
+
+  const ctrl = document.createElement('div');
+  ctrl.className = 'zoom-ctrl';
+  ctrl.setAttribute('role', 'group');
+  ctrl.setAttribute('aria-label', 'અક્ષરનું કદ');
+  ctrl.innerHTML =
+    '<button type="button" data-z="-1" aria-label="અક્ષર નાના કરો">A−</button>' +
+    '<button type="button" class="zoom-level" data-z="0" aria-label="મૂળ કદ">100%</button>' +
+    '<button type="button" data-z="1" aria-label="અક્ષર મોટા કરો">A+</button>';
+  book.appendChild(ctrl);
+  const [minus, level, plus] = ctrl.querySelectorAll('button');
+
+  function applyZoom(save) {
+    document.documentElement.style.setProperty('--text-zoom', LEVELS[zi]);
+    level.textContent = Math.round(LEVELS[zi] * 100) + '%';
+    minus.disabled = zi === 0;
+    plus.disabled = zi === LEVELS.length - 1;
+    if (save) {
+      try { localStorage.setItem('inviteZoom', String(zi)); } catch (_) {}
+      requestAnimationFrame(() => window.dispatchEvent(new Event('resize'))); // refresh "scroll down" cue
+    }
+  }
+  ctrl.addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    const z = Number(b.dataset.z);
+    zi = z === 0 ? 0 : clamp(zi + z, 0, LEVELS.length - 1);
+    applyZoom(true);
+  });
+  applyZoom(false);
+
   render();
 })();
 

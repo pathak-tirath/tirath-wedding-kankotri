@@ -3524,3 +3524,143 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .scroll-hint button i { animation: none; }
 }
+
+/* ==========================================================
+   APPEND THIS TO THE VERY END OF style.css
+   1) Re-enables pinch-zoom  2) Text-size (A− / A+) control
+   3) Real page-turn animation (follows the finger)
+   ========================================================== */
+
+/* ---------- 1. Pinch-zoom was blocked by "touch-action: pan-y" ---------- */
+.book {
+  position: relative;
+  touch-action: pan-y pinch-zoom;
+  perspective: none; /* perspective now lives on each page's transform */
+}
+
+/* ---------- 2. Text-size control (injected by script.js) ---------- */
+.zoom-ctrl {
+  position: absolute;
+  top: 7px;
+  right: 10px;
+  z-index: 80;
+  display: none;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid #c9a971;
+  border-radius: 999px;
+  background: rgba(255, 250, 240, 0.86);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 12px rgba(60, 25, 35, 0.2);
+}
+.stage.zoomable .zoom-ctrl {
+  display: flex;
+}
+.zoom-ctrl button {
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 50%;
+  background: #571b2a;
+  color: #fff8ef;
+  font: 700 15px/1 system-ui, sans-serif;
+  cursor: pointer;
+}
+.zoom-ctrl button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.zoom-ctrl .zoom-level {
+  width: auto;
+  min-width: 46px;
+  padding: 0 4px;
+  border-radius: 8px;
+  background: transparent;
+  color: #571b2a;
+  font-size: 12px;
+}
+.page:not(.cover):not(.welcome-page) .page-inner > * {
+  zoom: var(--text-zoom, 1);
+}
+
+/* ---------- 3. Page-turn animation ---------- */
+.pages {
+  transform-style: flat; /* z-index now decides stacking, no depth-sort flicker */
+}
+.page {
+  --flip-ease: cubic-bezier(0.45, 0.05, 0.2, 1);
+  transform: perspective(2400px) rotateY(var(--turn, 0deg));
+  transform-origin: left center;
+  backface-visibility: hidden;
+  visibility: visible;
+  will-change: auto;
+  box-shadow:
+    inset 12px 0 18px -18px #4c1c2a,
+    inset 0 0 0 1px #e4d4bd,
+    0 0 0 rgba(30, 10, 16, 0);
+  transition:
+    transform var(--flip-ms, 1000ms) var(--flip-ease),
+    box-shadow var(--flip-ms, 1000ms) var(--flip-ease),
+    visibility 0s;
+}
+.page.is-active,
+.page.is-next {
+  will-change: transform;
+}
+/* Page ends edge-on (-90deg), so the whole duration is visible
+   (the old -180deg hid the page at 90deg and the rest was dead time). */
+.page.flipped {
+  --turn: -90deg;
+  transform: perspective(2400px) rotateY(var(--turn, -90deg));
+  visibility: hidden;
+  pointer-events: none;
+  box-shadow:
+    inset -12px 0 18px -18px #4c1c2a,
+    inset 0 0 0 1px #e4d4bd,
+    18px 4px 36px rgba(30, 10, 16, 0.42);
+  transition:
+    transform var(--flip-ms, 1000ms) var(--flip-ease),
+    box-shadow var(--flip-ms, 1000ms) var(--flip-ease),
+    visibility 0s linear var(--flip-ms, 1000ms);
+}
+.page.is-active {
+  --shade: 0;
+}
+.page.is-next,
+.page.flipped {
+  --shade: 1;
+}
+
+/* Soft shading: turning page darkens, page underneath lightens as it is revealed */
+.page-shade {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    rgba(48, 16, 26, 0.42) 0%,
+    rgba(48, 16, 26, 0.16) 38%,
+    rgba(48, 16, 26, 0) 80%
+  );
+  opacity: var(--shade, 0);
+  transition: opacity var(--flip-ms, 1000ms) ease;
+}
+
+/* While a finger is dragging the page, follow it with no easing */
+.book.dragging .page,
+.book.dragging .page-shade {
+  transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page,
+  .page.flipped,
+  .page-shade {
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+  }
+}
