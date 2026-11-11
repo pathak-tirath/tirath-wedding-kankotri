@@ -3542,22 +3542,30 @@ body {
 .zoom-ctrl {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 6px;
+  gap: 10px;
   width: max-content;
   max-width: 100%;
-  margin: 6px auto 0;
-  padding: 3px 5px 3px 14px;
-  border: 1px solid #c9a971;
+  margin: 8px auto 0;
+  padding: 5px 5px 5px 14px;
+  border: 1px solid #d6bd8a;
   border-radius: 999px;
-  background: rgba(255, 250, 240, 0.94);
-  box-shadow: 0 4px 12px rgba(60, 25, 35, 0.18);
+  background: #fffaf0;
+  box-shadow:
+    0 6px 16px rgba(60, 25, 35, 0.16),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.7);
 }
 .zoom-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #6b2a3a;
   font-size: 13px;
   font-weight: 700;
-  color: #571b2a;
   white-space: nowrap;
+}
+.zoom-label svg {
+  flex: none;
+  color: #a9772f;
 }
 .zoom-label b {
   font-weight: inherit;
@@ -3565,16 +3573,33 @@ body {
 .zoom-label .zl-t {
   display: none;
 }
+/* the three buttons sit in one recessed track */
+.zoom-seg {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 999px;
+  background: #f1e4d0;
+  box-shadow: inset 0 1px 3px rgba(80, 40, 30, 0.2);
+}
 .zoom-ctrl button {
-  width: 42px; /* comfortable thumb target */
-  height: 42px;
+  width: 40px;
+  height: 40px;
   border: 0;
   border-radius: 50%;
   background: #571b2a;
   color: #fff8ef;
-  font: 700 16px/1 system-ui, sans-serif;
+  font: 700 15px/1 system-ui, sans-serif;
+  box-shadow: 0 2px 5px rgba(60, 25, 35, 0.3);
   cursor: pointer;
   transition: transform 0.12s;
+}
+.zoom-ctrl button[data-z="-1"] {
+  font-size: 14px; /* small A for smaller text, big A for bigger text */
+}
+.zoom-ctrl button[data-z="1"] {
+  font-size: 19px;
 }
 .zoom-ctrl button:active:not(:disabled) {
   transform: scale(0.92);
@@ -3584,23 +3609,27 @@ body {
   outline-offset: 2px;
 }
 .zoom-ctrl button:disabled {
-  opacity: 0.35;
+  background: #e6d8c3;
+  color: #a5937c;
+  box-shadow: none;
   cursor: default;
 }
 .zoom-ctrl .zoom-level {
   width: auto;
-  min-width: 52px;
+  min-width: 54px;
   padding: 0 4px;
-  border-radius: 10px;
+  border-radius: 20px;
   background: transparent;
+  box-shadow: none;
   color: #571b2a;
   font-size: 13px;
 }
 @media (max-width: 340px) {
-  .zoom-ctrl { padding-left: 10px; gap: 4px; }
+  .zoom-ctrl { gap: 6px; padding-left: 10px; }
   .zoom-label { font-size: 11px; }
-  .zoom-ctrl button { width: 38px; height: 38px; }
-  .zoom-ctrl .zoom-level { min-width: 44px; }
+  .zoom-label svg { display: none; }
+  .zoom-ctrl button { width: 36px; height: 36px; }
+  .zoom-ctrl .zoom-level { min-width: 46px; }
 }
 /* first visit only: highlight the bar and pulse A+ for a few seconds */
 .zoom-ctrl.zoom-tip {
