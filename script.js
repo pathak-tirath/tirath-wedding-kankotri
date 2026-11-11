@@ -190,9 +190,9 @@
   const ctrl = document.createElement('div');
   ctrl.className = 'zoom-ctrl';
   ctrl.setAttribute('role', 'group');
-  ctrl.setAttribute('aria-label', 'અક્ષરનું કદ');
+  ctrl.setAttribute('aria-label', 'લખાણ ઝૂમ કરો');
   ctrl.innerHTML =
-    '<span class="zoom-label"><b class="zl-n">અક્ષરનું કદ</b><b class="zl-t">અક્ષર મોટા કરો</b></span>' +
+    '<span class="zoom-label"><b class="zl-n">લખાણ માટે ઝૂમ કરો</b><b class="zl-t">વાંચવા ઝૂમ કરો ➜</b></span>' +
     '<button type="button" data-z="-1" aria-label="અક્ષર નાના કરો">A−</button>' +
     '<button type="button" class="zoom-level" data-z="0" aria-label="મૂળ કદ">100%</button>' +
     '<button type="button" data-z="1" aria-label="અક્ષર મોટા કરો">A+</button>';

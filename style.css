@@ -3596,6 +3596,12 @@ body {
   color: #571b2a;
   font-size: 13px;
 }
+@media (max-width: 340px) {
+  .zoom-ctrl { padding-left: 10px; gap: 4px; }
+  .zoom-label { font-size: 11px; }
+  .zoom-ctrl button { width: 38px; height: 38px; }
+  .zoom-ctrl .zoom-level { min-width: 44px; }
+}
 /* first visit only: highlight the bar and pulse A+ for a few seconds */
 .zoom-ctrl.zoom-tip {
   border-color: #a9772f;
